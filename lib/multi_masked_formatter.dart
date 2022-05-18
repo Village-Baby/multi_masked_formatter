@@ -4,11 +4,15 @@ class MultiMaskedTextInputFormatter extends TextInputFormatter {
   List<String> _masks = [];
   String _separator = '';
   String _prevMask = '';
+  bool _isPhoneNumber = false;
+  static const minPhoneNumberLength = 12;
 
   MultiMaskedTextInputFormatter({
     required List<String> masks,
     required String separator,
+    bool isPhoneNumber = false,
   }) {
+    _isPhoneNumber = isPhoneNumber;
     _separator = separator.isNotEmpty ? separator : '';
     if (masks.isNotEmpty) {
       _masks = masks;
@@ -22,7 +26,11 @@ class MultiMaskedTextInputFormatter extends TextInputFormatter {
     final newText = newValue.text;
     final oldText = oldValue.text;
 
-    if (newText.length == 0 || newText.length < oldText.length || _masks.isEmpty || _separator.isEmpty) {
+    if (_isPhoneNumber && newText.length < oldText.length && newText.length < minPhoneNumberLength) {
+      return newValue;
+    }
+
+    if (newText.isEmpty || _masks.isEmpty || _separator.isEmpty) {
       return newValue;
     }
 
@@ -36,10 +44,10 @@ class MultiMaskedTextInputFormatter extends TextInputFormatter {
       return oldValue;
     }
 
-    final needReset = (_prevMask != mask || newText.length - oldText.length > 1);
+    final needReset = _prevMask != mask;
     _prevMask = mask;
 
-    if (needReset) {
+    if (needReset || _isPhoneNumber && newText.length == minPhoneNumberLength) {
       final text = newText.replaceAll(_separator, '');
       String resetValue = '';
       int sep = 0;
