@@ -39,7 +39,7 @@ class MultiMaskedTextInputFormatter extends TextInputFormatter {
       final maskValue = pasted ? value.replaceAll(_separator, '') : value;
       return newText.length <= maskValue.length;
     }, orElse: () => '');
-    if (_isPhoneNumber && newText.length == minPhoneNumberLength) {
+    if (_isPhoneNumber && oldText.isEmpty && newText.length == minPhoneNumberLength) {
       mask = _masks.first.length < _masks.last.length ? _masks.first : _masks.last;
     }
 
