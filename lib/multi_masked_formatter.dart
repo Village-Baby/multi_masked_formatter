@@ -22,7 +22,8 @@ class MultiMaskedTextInputFormatter extends TextInputFormatter {
     final newText = newValue.text;
     final oldText = oldValue.text;
 
-    if (newText.length == 0 || newText.length < oldText.length || _masks.isEmpty || _separator.isEmpty) {
+    // if (newText.length == 0 || newText.length < oldText.length || _masks.isEmpty || _separator.isEmpty) {
+    if (newText.length == 0 || _masks.isEmpty || _separator.isEmpty) {
       return newValue;
     }
 
@@ -36,7 +37,8 @@ class MultiMaskedTextInputFormatter extends TextInputFormatter {
       return oldValue;
     }
 
-    final needReset = (_prevMask != mask || newText.length - oldText.length > 1);
+    final needReset = _prevMask != mask;
+    // final needReset = (_prevMask != mask || newText.length - oldText.length > 1);
     _prevMask = mask;
 
     if (needReset) {
