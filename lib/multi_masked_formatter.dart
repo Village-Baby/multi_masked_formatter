@@ -30,18 +30,15 @@ class MultiMaskedTextInputFormatter extends TextInputFormatter {
       return newValue;
     }
 
-    if (newText.length == 0 || _masks.isEmpty || _separator.isEmpty) {
+    if (newText.isEmpty || _masks.isEmpty || _separator.isEmpty) {
       return newValue;
     }
 
     final pasted = (newText.length - oldText.length).abs() > 1;
-    String mask = _masks.firstWhere((value) {
+    final mask = _masks.firstWhere((value) {
       final maskValue = pasted ? value.replaceAll(_separator, '') : value;
       return newText.length <= maskValue.length;
     }, orElse: () => '');
-    if (_isPhoneNumber && oldText.isEmpty && newText.length == minPhoneNumberLength) {
-      mask = _masks.first.length < _masks.last.length ? _masks.first : _masks.last;
-    }
 
     if (mask.isEmpty) {
       return oldValue;
@@ -50,7 +47,7 @@ class MultiMaskedTextInputFormatter extends TextInputFormatter {
     final needReset = _prevMask != mask;
     _prevMask = mask;
 
-    if (needReset) {
+    if (needReset || _isPhoneNumber && newText.length == minPhoneNumberLength) {
       final text = newText.replaceAll(_separator, '');
       String resetValue = '';
       int sep = 0;
