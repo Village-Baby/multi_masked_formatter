@@ -30,7 +30,6 @@ class MultiMaskedTextInputFormatter extends TextInputFormatter {
       return newValue;
     }
 
-    // if (newText.length == 0 || newText.length < oldText.length || _masks.isEmpty || _separator.isEmpty) {
     if (newText.length == 0 || _masks.isEmpty || _separator.isEmpty) {
       return newValue;
     }
