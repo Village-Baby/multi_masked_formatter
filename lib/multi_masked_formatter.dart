@@ -35,10 +35,13 @@ class MultiMaskedTextInputFormatter extends TextInputFormatter {
     }
 
     final pasted = (newText.length - oldText.length).abs() > 1;
-    final mask = _masks.firstWhere((value) {
+    String mask = _masks.firstWhere((value) {
       final maskValue = pasted ? value.replaceAll(_separator, '') : value;
       return newText.length <= maskValue.length;
     }, orElse: () => '');
+    if (_isPhoneNumber && newText.length == minPhoneNumberLength) {
+      mask = _masks.first.length < _masks.last.length ? _masks.first : _masks.last;
+    }
 
     if (mask.isEmpty) {
       return oldValue;
